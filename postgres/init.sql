@@ -1,0 +1,3 @@
+CREATE DATABASE identity_db;
+CREATE DATABASE event_db;
+CREATE DATABASE booking_db;

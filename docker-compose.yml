@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ticketing-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  identity-service:
+    build: ./identity-service
+    container_name: identity-service
+    restart: unless-stopped
+    env_file:
+      - ./identity-service/.env.example
+    depends_on:
+      - postgres
+    ports:
+      - "4001:4001"
+
+  event-service:
+    build: ./event-service
+    container_name: event-service
+    restart: unless-stopped
+    env_file:
+      - ./event-service/.env.example
+    depends_on:
+      - postgres
+      - identity-service
+    ports:
+      - "4002:4002"
+
+  booking-service:
+    build: ./booking-service
+    container_name: booking-service
+    restart: unless-stopped
+    env_file:
+      - ./booking-service/.env.example
+    depends_on:
+      - postgres
+      - identity-service
+      - event-service
+    ports:
+      - "4003:4003"
+
+  frontend:
+    build: ./frontend
+    container_name: ticketing-frontend
+    restart: unless-stopped
+    depends_on:
+      - identity-service
+      - event-service
+      - booking-service
+    ports:
+      - "5173:5173"
+
+volumes:
+  postgres_data:

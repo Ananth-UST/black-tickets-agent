@@ -22,13 +22,19 @@ const initDb = async () => {
   `;
   await pool.query(query);
 
-  const adminEmail = process.env.ADMIN_EMAIL || "admin@bookish.com";
-  const adminPassword = process.env.ADMIN_PASSWORD || "Admin@123";
-  const userEmail = process.env.USER_EMAIL || "user@bookish.com";
-  const userPassword = process.env.USER_PASSWORD || "User@123";
+  // Production: Require all environment variables to be set
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  const userEmail = process.env.USER_EMAIL;
+  const userPassword = process.env.USER_PASSWORD;
 
-  const adminHash = await bcrypt.hash(adminPassword, 10);
-  const userHash = await bcrypt.hash(userPassword, 10);
+  if (!adminEmail || !adminPassword || !userEmail || !userPassword) {
+    throw new Error('Missing required environment variables: ADMIN_EMAIL, ADMIN_PASSWORD, USER_EMAIL, USER_PASSWORD');
+  }
+
+  const bcryptRounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
+  const adminHash = await bcrypt.hash(adminPassword, bcryptRounds);
+  const userHash = await bcrypt.hash(userPassword, bcryptRounds);
 
   await pool.query(
     `INSERT INTO users (email, password_hash, name, role)

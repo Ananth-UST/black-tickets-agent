@@ -50,6 +50,8 @@ Frontend `.env.example` contains:
 
 ## Run with Docker
 
+### Local Development
+
 1. From project root:
 
 ```bash
@@ -62,6 +64,75 @@ docker compose up --build
 - Identity: `http://localhost:4001/health`
 - Event: `http://localhost:4002/health`
 - Booking: `http://localhost:4003/health`
+
+### EC2 Deployment
+
+#### Quick Production Setup (Recommended)
+
+1. On EC2 instance, install Docker & Docker Compose
+
+2. Clone repository and navigate to project folder
+
+3. Run production setup script:
+```bash
+chmod +x scripts/setup-production.sh
+./scripts/setup-production.sh
+```
+
+4. Access application: `http://your-ec2-ip`
+
+#### Manual Setup
+
+1. Generate secure secrets:
+```bash
+node scripts/generate-secrets.js
+```
+
+2. Configure environment files:
+```bash
+# Copy production environment templates
+cp frontend/.env.production frontend/.env
+cp identity-service/.env.production identity-service/.env
+cp event-service/.env.production event-service/.env
+cp booking-service/.env.production booking-service/.env
+cp chatbot-service/.env.production chatbot-service/.env
+cp .env.production .env
+
+# Edit frontend/.env and replace YOUR_EC2_IP_OR_DOMAIN with your actual EC2 public IP
+nano frontend/.env
+
+# Replace all placeholder values with generated secure secrets
+```
+
+3. Run with production configuration:
+```bash
+# With Nginx reverse proxy (recommended)
+docker-compose -f docker-compose.prod.yml up --build -d
+
+# Or basic setup
+docker compose up --build -d
+```
+
+4. Access application: `http://your-ec2-ip`
+
+#### Security Requirements
+
+**EC2 Security Group Configuration:**
+- **HTTP (80)**: Open to all (for web access)
+- **HTTPS (443)**: Open to all (for SSL)
+- **SSH (22)**: Your IP only (for administration)
+- **Database (5432)**: CLOSED (internal only)
+- **Backend ports (4001-4004)**: CLOSED (internal only)
+
+**Production Security Features:**
+- ✅ Secure random passwords and JWT secrets
+- ✅ Health checks for all services
+- ✅ Rate limiting and security headers
+- ✅ Internal-only database access
+- ✅ No hardcoded credentials
+- ✅ Environment variable validation
+
+**Important**: Never commit actual secrets to version control. Use the provided scripts to generate secure values.
 
 ## APIs
 

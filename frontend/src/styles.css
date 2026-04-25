@@ -269,6 +269,31 @@ input:focus {
   margin: 20px 0 12px;
 }
 
+.chatbot-box {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.chatbot-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.chatbot-form input {
+  margin-bottom: 0;
+}
+
+.chatbot-reply {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(25, 198, 180, 0.35);
+  background: rgba(25, 198, 180, 0.12);
+  color: #d9fff9;
+}
+
 @media (max-width: 860px) {
   .navbar {
     flex-direction: column;
@@ -279,5 +304,10 @@ input:focus {
   .page-header {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .chatbot-form {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

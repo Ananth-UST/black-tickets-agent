@@ -40,7 +40,7 @@ Each backend service has `.env.example` with:
 - `DB_USER`
 - `DB_PASS`
 - `DB_NAME`
-- `JWT_SECRET` (identity-service only)
+- `JWT_SECRET` (identity-service, event-service, booking-service)
 
 Frontend `.env.example` contains:
 
@@ -88,7 +88,7 @@ docker compose up --build
 ## Notes
 
 - Stateless service design (no in-memory state dependency).
-- `booking-service` validates JWT through `identity-service`.
+- `event-service` and `booking-service` validate JWT locally using shared `JWT_SECRET`.
 - Seat availability is reduced via `event-service` reserve endpoint.
 - Databases created automatically: `identity_db`, `event_db`, `booking_db`.
 - Event seed content and frontend visual style are aligned to your reference repo: [Ananth-UST/bookishtickets](https://github.com/Ananth-UST/bookishtickets.git).

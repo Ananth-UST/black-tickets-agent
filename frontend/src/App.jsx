@@ -1,6 +1,6 @@
 import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { bookingApi, eventApi, identityApi, setAuthToken } from "./api";
+import { bookingApi, chatbotApi, eventApi, identityApi, setAuthToken } from "./api";
 
 const useAuth = () => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
@@ -138,10 +138,30 @@ function EventsPage({ user }) {
 function EventDetailPage() {
   const { id } = useParams();
   const [eventItem, setEventItem] = useState(null);
+  const [chatInput, setChatInput] = useState("");
+  const [chatReply, setChatReply] = useState("");
+  const [chatError, setChatError] = useState("");
 
   useEffect(() => {
     eventApi.get(`/events/${id}`).then((res) => setEventItem(res.data));
   }, [id]);
+
+  const askChatbot = async (e) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    setChatError("");
+    try {
+      const { data } = await chatbotApi.post("/chat", {
+        message: chatInput,
+        eventId: Number(id)
+      });
+      setChatReply(data.reply);
+      setChatInput("");
+    } catch (error) {
+      setChatError(error?.response?.data?.message || "Chatbot is unavailable right now.");
+    }
+  };
 
   if (!eventItem) return <p className="muted">Loading event details...</p>;
 
@@ -155,6 +175,21 @@ function EventDetailPage() {
         <div className="stat-box"><span>Available Seats</span><strong>{eventItem.available_seats}</strong></div>
       </div>
       <Link to={`/book/${eventItem.id}`} className="btn-primary">Book Tickets</Link>
+
+      <div className="chatbot-box">
+        <h3>Event Assistant</h3>
+        <p className="muted">Ask about date, venue, seats, or event highlights.</p>
+        <form onSubmit={askChatbot} className="chatbot-form">
+          <input
+            value={chatInput}
+            onChange={(e) => setChatInput(e.target.value)}
+            placeholder="e.g., How many seats are left?"
+          />
+          <button type="submit" className="btn-primary">Ask</button>
+        </form>
+        {chatReply && <p className="chatbot-reply">{chatReply}</p>}
+        {chatError && <p className="form-message">{chatError}</p>}
+      </div>
     </section>
   );
 }

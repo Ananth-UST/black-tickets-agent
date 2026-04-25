@@ -5,6 +5,8 @@ const IDENTITY_URL =
 const EVENT_URL = import.meta.env.VITE_EVENT_SERVICE_URL || "http://localhost:4002";
 const BOOKING_URL =
   import.meta.env.VITE_BOOKING_SERVICE_URL || "http://localhost:4003";
+const CHATBOT_URL =
+  import.meta.env.VITE_CHATBOT_SERVICE_URL || "http://localhost:4004";
 
 export const identityApi = axios.create({
   baseURL: IDENTITY_URL
@@ -16,6 +18,10 @@ export const eventApi = axios.create({
 
 export const bookingApi = axios.create({
   baseURL: BOOKING_URL
+});
+
+export const chatbotApi = axios.create({
+  baseURL: CHATBOT_URL
 });
 
 export const setAuthToken = (token) => {

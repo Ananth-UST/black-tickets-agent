@@ -29,6 +29,10 @@ services:
     build: ./event-service
     container_name: event-service
     restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          - event_service
     env_file:
       - ./event-service/.env.example
     depends_on:
@@ -50,6 +54,17 @@ services:
     ports:
       - "4003:4003"
 
+  chatbot-service:
+    build: ./chatbot-service
+    container_name: chatbot-service
+    restart: unless-stopped
+    env_file:
+      - ./chatbot-service/.env.example
+    depends_on:
+      - event-service
+    ports:
+      - "4004:4004"
+
   frontend:
     build: ./frontend
     container_name: ticketing-frontend
@@ -58,6 +73,7 @@ services:
       - identity-service
       - event-service
       - booking-service
+      - chatbot-service
     ports:
       - "5173:5173"
 

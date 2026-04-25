@@ -27,7 +27,7 @@ services:
     container_name: identity-service
     restart: unless-stopped
     env_file:
-      - ./identity-service/.env
+      - .env.production
     depends_on:
       postgres:
         condition: service_healthy
@@ -51,7 +51,7 @@ services:
     networks:
       - ticketing_network
     env_file:
-      - ./event-service/.env
+      - .env.production
     depends_on:
       postgres:
         condition: service_healthy
@@ -69,7 +69,7 @@ services:
     container_name: booking-service
     restart: unless-stopped
     env_file:
-      - ./booking-service/.env
+      - .env.production
     depends_on:
       postgres:
         condition: service_healthy
@@ -93,7 +93,7 @@ services:
     container_name: chatbot-service
     restart: unless-stopped
     env_file:
-      - ./chatbot-service/.env
+      - .env.production
     depends_on:
       event-service:
         condition: service_healthy
@@ -113,7 +113,7 @@ services:
     container_name: ticketing-frontend
     restart: unless-stopped
     env_file:
-      - ./frontend/.env
+      - ./frontend/.env.production
     depends_on:
       identity-service:
         condition: service_healthy

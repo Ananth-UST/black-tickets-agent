@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ticketing-config
+  namespace: ticketing
+data:
+  NODE_ENV: "production"
+  POSTGRES_USER: "postgres"
+  POSTGRES_DB: "ticketing_prod"
+  DB_HOST: "postgres-service"
+  DB_PORT: "5432"
+  DB_USER: "postgres"
+  IDENTITY_DB_NAME: "identity_db"
+  EVENT_DB_NAME: "event_db"
+  BOOKING_DB_NAME: "booking_db"
+  EVENT_SERVICE_URL: "http://event-service:4002"
+  COMPOSE_PROJECT_NAME: "ticketing-prod"
+  COMPOSE_FILE: "docker-compose.yml"
+  BCRYPT_ROUNDS: "12"
+  JWT_EXPIRES_IN: "2h"
+  VITE_API_BASE_URL: ""
+  VITE_IDENTITY_SERVICE_URL: ""
+  VITE_EVENT_SERVICE_URL: ""
+  VITE_BOOKING_SERVICE_URL: ""
+  VITE_CHATBOT_SERVICE_URL: ""

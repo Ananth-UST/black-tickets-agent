@@ -1,0 +1,49 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ticketing-ingress
+  namespace: ticketing
+  annotations:
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: ticketing.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 5173
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: identity-service
+            port:
+              number: 4001
+      - path: /events
+        pathType: Prefix
+        backend:
+          service:
+            name: event-service
+            port:
+              number: 4002
+      - path: /bookings
+        pathType: Prefix
+        backend:
+          service:
+            name: booking-service
+            port:
+              number: 4003
+      - path: /chatbot
+        pathType: Prefix
+        backend:
+          service:
+            name: chatbot-service
+            port:
+              number: 4004

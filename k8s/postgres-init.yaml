@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+  namespace: ticketing
+data:
+  init.sql: |
+    -- Initialize databases for each service
+    CREATE DATABASE identity_db;
+    CREATE DATABASE event_db;
+    CREATE DATABASE booking_db;

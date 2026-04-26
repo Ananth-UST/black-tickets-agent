@@ -1,6 +1,6 @@
 import { Link, Route, Routes, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { bookingApi, chatbotApi, eventApi, identityApi, setAuthToken } from "./api";
+import { bookingApi, chatbotApi, eventApi, identityApi, userApi, setAuthToken } from "./api";
 
 const useAuth = () => {
   const [token, setToken] = useState(localStorage.getItem("token") || "");
@@ -35,7 +35,7 @@ function RegisterPage() {
   const submit = async (e) => {
     e.preventDefault();
     try {
-      await identityApi.post("/auth/register", form);
+      await identityApi.post("/register", form);
       setMessage("Account created successfully. Please login.");
     } catch (err) {
       setMessage(err?.response?.data?.message || "Registration failed.");
@@ -72,7 +72,7 @@ function LoginPage({ onLogin }) {
     e.preventDefault();
     setError("");
     try {
-      const { data } = await identityApi.post("/auth/login", { email, password });
+      const { data } = await identityApi.post("/login", { email, password });
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       onLogin(data.token, data.user);
@@ -104,7 +104,7 @@ function EventsPage({ user }) {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    eventApi.get("/events").then((res) => setEvents(res.data));
+    eventApi.get("/").then((res) => setEvents(res.data));
   }, []);
 
   return (
@@ -143,7 +143,7 @@ function EventDetailPage() {
   const [chatError, setChatError] = useState("");
 
   useEffect(() => {
-    eventApi.get(`/events/${id}`).then((res) => setEventItem(res.data));
+    eventApi.get(`/${id}`).then((res) => setEventItem(res.data));
   }, [id]);
 
   const askChatbot = async (e) => {
@@ -202,7 +202,7 @@ function BookingPage() {
   const submit = async (e) => {
     e.preventDefault();
     try {
-      await bookingApi.post("/bookings", { event_id: Number(id), seats: Number(seats) });
+      await bookingApi.post("/", { event_id: Number(id), seats: Number(seats) });
       setMessage("Booking successful.");
     } catch (err) {
       setMessage(err?.response?.data?.message || "Booking failed.");
@@ -243,7 +243,7 @@ function CreateEventPage({ user }) {
   const submit = async (e) => {
     e.preventDefault();
     try {
-      await eventApi.post("/events", form);
+      await eventApi.post("/", form);
       navigate("/events");
     } catch (err) {
       setMessage(err?.response?.data?.message || "Could not create event.");
@@ -279,8 +279,8 @@ function DashboardPage() {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    identityApi.get("/users/me").then((res) => setProfile(res.data));
-    bookingApi.get("/bookings").then((res) => setBookings(res.data));
+    userApi.get("/me").then((res) => setProfile(res.data));
+    bookingApi.get("/").then((res) => setBookings(res.data));
   }, []);
 
   return (

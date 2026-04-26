@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatbot-service
+  namespace: ticketing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chatbot-service
+  template:
+    metadata:
+      labels:
+        app: chatbot-service
+    spec:
+      containers:
+      - name: chatbot-service
+        image: ananthakkumar/new_ticket-chatbot-service:v2
+        ports:
+        - containerPort: 4004
+        envFrom:
+        - configMapRef:
+            name: ticketing-config
+        - secretRef:
+            name: ticketing-secrets
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 4004
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 4004
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatbot-service
+  namespace: ticketing
+spec:
+  selector:
+    app: chatbot-service
+  ports:
+  - port: 4004
+    targetPort: 4004
+  type: ClusterIP

@@ -1,32 +1,33 @@
 import axios from "axios";
 
-const IDENTITY_URL =
-  import.meta.env.VITE_IDENTITY_SERVICE_URL || "http://localhost:4001";
-const EVENT_URL = import.meta.env.VITE_EVENT_SERVICE_URL || "http://localhost:4002";
-const BOOKING_URL =
-  import.meta.env.VITE_BOOKING_SERVICE_URL || "http://localhost:4003";
-const CHATBOT_URL =
-  import.meta.env.VITE_CHATBOT_SERVICE_URL || "http://localhost:4004";
+// For Kubernetes: use relative paths (routed via Ingress)
+// For local Docker with nginx: set VITE_API_BASE_URL to http://localhost
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 export const identityApi = axios.create({
-  baseURL: IDENTITY_URL
+  baseURL: `${API_BASE_URL}/auth`
+});
+
+export const userApi = axios.create({
+  baseURL: `${API_BASE_URL}/users`
 });
 
 export const eventApi = axios.create({
-  baseURL: EVENT_URL
+  baseURL: `${API_BASE_URL}/events`
 });
 
 export const bookingApi = axios.create({
-  baseURL: BOOKING_URL
+  baseURL: `${API_BASE_URL}/bookings`
 });
 
 export const chatbotApi = axios.create({
-  baseURL: CHATBOT_URL
+  baseURL: `${API_BASE_URL}/chatbot`
 });
 
 export const setAuthToken = (token) => {
   const header = token ? `Bearer ${token}` : "";
   identityApi.defaults.headers.common.Authorization = header;
+  userApi.defaults.headers.common.Authorization = header;
   bookingApi.defaults.headers.common.Authorization = header;
   eventApi.defaults.headers.common.Authorization = header;
 };

@@ -6,26 +6,6 @@ metadata:
 data:
   init.sql: |
     -- Initialize databases for each service
-    CREATE DATABASE IF NOT EXISTS identity_db;
-    CREATE DATABASE IF NOT EXISTS event_db;
-    CREATE DATABASE IF NOT EXISTS booking_db;
-    
-    -- Create users for each service
-    CREATE USER IF NOT EXISTS identity_user WITH PASSWORD 'SecureProdPass123!@#';
-    CREATE USER IF NOT EXISTS event_user WITH PASSWORD 'SecureProdPass123!@#';
-    CREATE USER IF NOT EXISTS booking_user WITH PASSWORD 'SecureProdPass123!@#';
-    
-    -- Grant permissions
-    GRANT ALL PRIVILEGES ON DATABASE identity_db TO identity_user;
-    GRANT ALL PRIVILEGES ON DATABASE event_db TO event_user;
-    GRANT ALL PRIVILEGES ON DATABASE booking_db TO booking_user;
-    
-    -- Connect to each database and grant schema permissions
-    \c identity_db;
-    GRANT ALL ON SCHEMA public TO identity_user;
-    
-    \c event_db;
-    GRANT ALL ON SCHEMA public TO event_user;
-    
-    \c booking_db;
-    GRANT ALL ON SCHEMA public TO booking_user;
+    CREATE DATABASE identity_db;
+    CREATE DATABASE event_db;
+    CREATE DATABASE booking_db;

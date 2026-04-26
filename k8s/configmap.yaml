@@ -10,6 +10,7 @@ data:
   DB_HOST: "postgres-service"
   DB_PORT: "5432"
   DB_USER: "postgres"
+  DB_NAME: "identity_db"
   IDENTITY_DB_NAME: "identity_db"
   EVENT_DB_NAME: "event_db"
   BOOKING_DB_NAME: "booking_db"

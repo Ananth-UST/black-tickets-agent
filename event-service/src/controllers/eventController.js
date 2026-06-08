@@ -7,7 +7,7 @@ const {
 
 const create = async (req, res, next) => {
   try {
-    const { name, description, venue, date, total_seats } = req.body;
+    const { name, description, venue, date, total_seats, poster_url } = req.body;
     if (!name || !venue || !date || !total_seats) {
       return res.status(400).json({ message: "name, venue, date and total_seats are required" });
     }
@@ -17,7 +17,8 @@ const create = async (req, res, next) => {
       description: description || "",
       venue,
       date,
-      total_seats: Number(total_seats)
+      total_seats: Number(total_seats),
+      poster_url: poster_url || null
     });
     return res.status(201).json(event);
   } catch (error) {

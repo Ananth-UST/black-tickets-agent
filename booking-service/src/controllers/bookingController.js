@@ -4,6 +4,7 @@ const {
   getBookingById,
   hasActiveBooking
 } = require("../models/bookingModel");
+const { sendBookingNotification } = require("../services/notificationQueue");
 
 const create = async (req, res, next) => {
   try {
@@ -27,7 +28,10 @@ const create = async (req, res, next) => {
       `${process.env.EVENT_SERVICE_URL}/events/${eventId}/reserve`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "x-service-token": process.env.INTERNAL_SERVICE_TOKEN || ""
+        },
         body: JSON.stringify({ seats })
       }
     );
@@ -42,6 +46,20 @@ const create = async (req, res, next) => {
       seats,
       status: "confirmed"
     });
+
+    try {
+      await sendBookingNotification({
+        type: "BOOKING_CONFIRMED",
+        bookingId: booking.id,
+        userId: booking.user_id,
+        eventId: booking.event_id,
+        seats: booking.seats,
+        status: booking.status,
+        createdAt: booking.created_at
+      });
+    } catch (notificationError) {
+      console.error("Failed to send booking notification:", notificationError);
+    }
 
     return res.status(201).json(booking);
   } catch (error) {

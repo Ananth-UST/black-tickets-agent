@@ -21,6 +21,7 @@ const initDb = async () => {
     );
   `;
   await pool.query(query);
+  await pool.query("ALTER TABLE events ADD COLUMN IF NOT EXISTS poster_url TEXT");
 
   const { rows } = await pool.query("SELECT COUNT(*)::int AS count FROM events");
   if (rows[0].count > 0) {

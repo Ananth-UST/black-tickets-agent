@@ -2,8 +2,8 @@ const { pool } = require("../config/db");
 
 const createEvent = async (payload) => {
   const query = `
-    INSERT INTO events (name, description, venue, date, total_seats, available_seats)
-    VALUES ($1, $2, $3, $4, $5, $5)
+    INSERT INTO events (name, description, venue, date, total_seats, available_seats, poster_url)
+    VALUES ($1, $2, $3, $4, $5, $5, $6)
     RETURNING *;
   `;
   const values = [
@@ -11,7 +11,8 @@ const createEvent = async (payload) => {
     payload.description,
     payload.venue,
     payload.date,
-    payload.total_seats
+    payload.total_seats,
+    payload.poster_url || null
   ];
   const { rows } = await pool.query(query, values);
   return rows[0];

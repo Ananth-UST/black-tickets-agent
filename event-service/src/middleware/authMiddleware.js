@@ -23,4 +23,15 @@ const requireAdmin = (req, res, next) => {
   return next();
 };
 
-module.exports = { requireAuth, requireAdmin };
+const requireServiceToken = (req, res, next) => {
+  const expectedToken = process.env.INTERNAL_SERVICE_TOKEN;
+  const providedToken = req.headers["x-service-token"];
+
+  if (!expectedToken || providedToken !== expectedToken) {
+    return res.status(403).json({ message: "Service token required" });
+  }
+
+  return next();
+};
+
+module.exports = { requireAuth, requireAdmin, requireServiceToken };

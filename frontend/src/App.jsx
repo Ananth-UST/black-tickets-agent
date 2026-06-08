@@ -120,6 +120,9 @@ function EventsPage({ user }) {
       <div className="event-grid">
         {events.map((eventItem) => (
           <article key={eventItem.id} className="surface-card event-card">
+            {eventItem.poster_url && (
+              <img className="event-poster" src={eventItem.poster_url} alt={eventItem.name} />
+            )}
             <div className="event-meta">
               <span className="pill">{new Date(eventItem.date).toLocaleDateString()}</span>
               <span className="pill pill-secondary">{eventItem.available_seats} seats left</span>
@@ -167,6 +170,9 @@ function EventDetailPage() {
 
   return (
     <section className="surface-card detail-card">
+      {eventItem.poster_url && (
+        <img className="detail-poster" src={eventItem.poster_url} alt={eventItem.name} />
+      )}
       <h2>{eventItem.name}</h2>
       <p className="muted">{eventItem.description}</p>
       <div className="stats-row">
@@ -232,7 +238,8 @@ function CreateEventPage({ user }) {
     description: "",
     venue: "",
     date: "",
-    total_seats: 100
+    total_seats: 100,
+    poster_url: ""
   });
   const [message, setMessage] = useState("");
 
@@ -266,6 +273,8 @@ function CreateEventPage({ user }) {
           <input id="event-date" type="datetime-local" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
           <label className="field-label" htmlFor="event-total-seats">Total seats</label>
           <input id="event-total-seats" type="number" min="1" value={form.total_seats} onChange={(e) => setForm({ ...form, total_seats: Number(e.target.value) })} />
+          <label className="field-label" htmlFor="event-poster-url">Poster URL</label>
+          <input id="event-poster-url" value={form.poster_url} onChange={(e) => setForm({ ...form, poster_url: e.target.value })} placeholder="https://..." />
           <button className="btn-primary" type="submit">Publish Event</button>
           <FormMessage text={message} />
         </form>

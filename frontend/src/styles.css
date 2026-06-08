@@ -212,6 +212,23 @@ input:focus {
   padding: 22px;
 }
 
+.event-poster,
+.detail-poster {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.event-poster {
+  aspect-ratio: 16 / 9;
+}
+
+.detail-poster {
+  max-height: 420px;
+}
+
 .event-card p,
 .detail-card p {
   margin-bottom: 10px;

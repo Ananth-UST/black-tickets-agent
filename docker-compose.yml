@@ -32,6 +32,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env.production
+    environment:
+      DB_NAME: identity_db
     depends_on:
       postgres:
         condition: service_healthy
@@ -56,6 +58,8 @@ services:
       - ticketing_network
     env_file:
       - .env.production
+    environment:
+      DB_NAME: event_db
     depends_on:
       postgres:
         condition: service_healthy
@@ -74,6 +78,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env.production
+    environment:
+      DB_NAME: booking_db
     depends_on:
       postgres:
         condition: service_healthy

@@ -124,6 +124,11 @@ variable "internal_service_token" {
   sensitive   = true
 }
 
+variable "poster_bucket_name" {
+  description = "S3 bucket name used for uploaded event poster images."
+  type        = string
+}
+
 variable "admin_email" {
   description = "Seed admin user email for identity-service startup."
   type        = string

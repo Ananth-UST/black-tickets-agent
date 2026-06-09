@@ -33,6 +33,25 @@ resource "aws_iam_role_policy_attachment" "ec2_ssm_managed_instance_core" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+data "aws_iam_policy_document" "ec2_poster_bucket_access" {
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:PutObjectTagging"
+    ]
+
+    resources = [
+      "arn:aws:s3:::${var.poster_bucket_name}/event-posters/*"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "ec2_poster_bucket_access" {
+  name   = "${local.name_prefix}-poster-bucket-access"
+  role   = aws_iam_role.ec2_app.id
+  policy = data.aws_iam_policy_document.ec2_poster_bucket_access.json
+}
+
 resource "aws_iam_instance_profile" "ec2_app" {
   name = "${local.name_prefix}-ec2-app-profile"
   role = aws_iam_role.ec2_app.name

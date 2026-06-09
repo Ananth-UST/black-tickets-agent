@@ -4,6 +4,7 @@ const {
   getEventById,
   reserveSeats
 } = require("../models/eventModel");
+const { uploadPoster } = require("../services/posterStorage");
 
 const create = async (req, res, next) => {
   try {
@@ -12,13 +13,15 @@ const create = async (req, res, next) => {
       return res.status(400).json({ message: "name, venue, date and total_seats are required" });
     }
 
+    const uploadedPosterUrl = req.file ? await uploadPoster(req.file) : null;
+
     const event = await createEvent({
       name,
       description: description || "",
       venue,
       date,
       total_seats: Number(total_seats),
-      poster_url: poster_url || null
+      poster_url: uploadedPosterUrl || poster_url || null
     });
     return res.status(201).json(event);
   } catch (error) {

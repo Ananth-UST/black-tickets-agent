@@ -20,6 +20,7 @@ db_name              = "identity_db"
 db_username          = "postgres"
 db_instance_class    = "db.t4g.micro"
 db_allocated_storage = 20
+poster_bucket_name   = "blacktickets-dev-posters"
 
 
 admin_email    = "admin@blacktickets.com"

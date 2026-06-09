@@ -146,6 +146,11 @@ output "nat_gateway_public_ip" {
   value       = aws_eip.nat.public_ip
 }
 
+output "poster_bucket_name" {
+  description = "Name of the S3 bucket used for event poster uploads."
+  value       = aws_s3_bucket.posters.bucket
+}
+
 output "public_alb_dns_name" {
   description = "DNS name of the public frontend ALB."
   value       = aws_lb.public.dns_name

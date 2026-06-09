@@ -239,7 +239,8 @@ function CreateEventPage({ user }) {
     venue: "",
     date: "",
     total_seats: 100,
-    poster_url: ""
+    poster_url: "",
+    poster: null
   });
   const [message, setMessage] = useState("");
 
@@ -250,7 +251,20 @@ function CreateEventPage({ user }) {
   const submit = async (e) => {
     e.preventDefault();
     try {
-      await eventApi.post("/", form);
+      const payload = new FormData();
+      payload.append("name", form.name);
+      payload.append("description", form.description);
+      payload.append("venue", form.venue);
+      payload.append("date", form.date);
+      payload.append("total_seats", form.total_seats);
+      if (form.poster_url) {
+        payload.append("poster_url", form.poster_url);
+      }
+      if (form.poster) {
+        payload.append("poster", form.poster);
+      }
+
+      await eventApi.post("/", payload);
       navigate("/events");
     } catch (err) {
       setMessage(err?.response?.data?.message || "Could not create event.");
@@ -275,6 +289,8 @@ function CreateEventPage({ user }) {
           <input id="event-total-seats" type="number" min="1" value={form.total_seats} onChange={(e) => setForm({ ...form, total_seats: Number(e.target.value) })} />
           <label className="field-label" htmlFor="event-poster-url">Poster URL</label>
           <input id="event-poster-url" value={form.poster_url} onChange={(e) => setForm({ ...form, poster_url: e.target.value })} placeholder="https://..." />
+          <label className="field-label" htmlFor="event-poster">Poster image</label>
+          <input id="event-poster" type="file" accept="image/*" onChange={(e) => setForm({ ...form, poster: e.target.files?.[0] || null })} />
           <button className="btn-primary" type="submit">Publish Event</button>
           <FormMessage text={message} />
         </form>

@@ -62,6 +62,7 @@ resource "aws_launch_template" "app" {
     export DB_PASSWORD="$(secret_value DB_PASSWORD)"
     export JWT_SECRET="$(secret_value JWT_SECRET)"
     export INTERNAL_SERVICE_TOKEN="$(secret_value INTERNAL_SERVICE_TOKEN)"
+    export BOOKING_NOTIFICATION_QUEUE_URL="$(secret_value BOOKING_NOTIFICATION_QUEUE_URL)"
     export ADMIN_EMAIL="$(secret_value ADMIN_EMAIL)"
     export ADMIN_PASSWORD="$(secret_value ADMIN_PASSWORD)"
     export USER_EMAIL="$(secret_value USER_EMAIL)"
@@ -132,6 +133,8 @@ resource "aws_launch_template" "app" {
       -e JWT_SECRET="$${JWT_SECRET}" \
       -e INTERNAL_SERVICE_TOKEN="$${INTERNAL_SERVICE_TOKEN}" \
       -e EVENT_SERVICE_URL="http://event-service:4002" \
+      -e AWS_REGION="$${AWS_REGION}" \
+      -e BOOKING_NOTIFICATION_QUEUE_URL="$${BOOKING_NOTIFICATION_QUEUE_URL}" \
       "$${ECR_REGISTRY}/blacktickets-booking-service:$${IMAGE_TAG}"
 
     docker run -d --restart unless-stopped --name chatbot-service --network blacktickets -p 4004:4004 \

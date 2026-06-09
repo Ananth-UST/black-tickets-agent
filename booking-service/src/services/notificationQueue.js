@@ -18,6 +18,7 @@ const sendBookingNotification = async (payload) => {
   });
 
   await sqsClient.send(command);
+  console.log("Published booking notification to SQS.");
 };
 
 module.exports = { sendBookingNotification };

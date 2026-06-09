@@ -175,3 +175,13 @@ output "backend_target_group_arns" {
     chatbot  = aws_lb_target_group.chatbot.arn
   }
 }
+
+output "booking_notifications_queue_url" {
+  description = "URL of the booking notifications SQS queue."
+  value       = aws_sqs_queue.booking_notifications.url
+}
+
+output "booking_notifications_queue_arn" {
+  description = "ARN of the booking notifications SQS queue."
+  value       = aws_sqs_queue.booking_notifications.arn
+}

@@ -52,6 +52,26 @@ resource "aws_iam_role_policy" "ec2_poster_bucket_access" {
   policy = data.aws_iam_policy_document.ec2_poster_bucket_access.json
 }
 
+data "aws_iam_policy_document" "ec2_booking_notifications_sqs" {
+  statement {
+    actions = [
+      "sqs:SendMessage",
+      "sqs:GetQueueUrl",
+      "sqs:GetQueueAttributes"
+    ]
+
+    resources = [
+      aws_sqs_queue.booking_notifications.arn
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "ec2_booking_notifications_sqs" {
+  name   = "${local.name_prefix}-booking-notifications-sqs"
+  role   = aws_iam_role.ec2_app.id
+  policy = data.aws_iam_policy_document.ec2_booking_notifications_sqs.json
+}
+
 resource "aws_iam_instance_profile" "ec2_app" {
   name = "${local.name_prefix}-ec2-app-profile"
   role = aws_iam_role.ec2_app.name

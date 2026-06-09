@@ -42,15 +42,16 @@ resource "aws_secretsmanager_secret_version" "app_config" {
   secret_id = aws_secretsmanager_secret.app_config.id
 
   secret_string = jsonencode({
-    DB_HOST                = aws_db_instance.postgres.address
-    DB_PORT                = tostring(var.rds_port)
-    DB_USER                = var.db_username
-    DB_PASSWORD            = var.db_password
-    JWT_SECRET             = var.jwt_secret
-    INTERNAL_SERVICE_TOKEN = var.internal_service_token
-    ADMIN_EMAIL            = var.admin_email
-    ADMIN_PASSWORD         = var.admin_password
-    USER_EMAIL             = var.user_email
-    USER_PASSWORD          = var.user_password
+    DB_HOST                        = aws_db_instance.postgres.address
+    DB_PORT                        = tostring(var.rds_port)
+    DB_USER                        = var.db_username
+    DB_PASSWORD                    = var.db_password
+    JWT_SECRET                     = var.jwt_secret
+    INTERNAL_SERVICE_TOKEN         = var.internal_service_token
+    BOOKING_NOTIFICATION_QUEUE_URL = aws_sqs_queue.booking_notifications.url
+    ADMIN_EMAIL                    = var.admin_email
+    ADMIN_PASSWORD                 = var.admin_password
+    USER_EMAIL                     = var.user_email
+    USER_PASSWORD                  = var.user_password
   })
 }

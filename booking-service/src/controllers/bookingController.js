@@ -49,13 +49,11 @@ const create = async (req, res, next) => {
 
     try {
       await sendBookingNotification({
-        type: "BOOKING_CONFIRMED",
-        bookingId: booking.id,
-        userId: booking.user_id,
-        eventId: booking.event_id,
-        seats: booking.seats,
-        status: booking.status,
-        createdAt: booking.created_at
+        eventType: "BOOKING_CONFIRMED",
+        bookingId: String(booking.id),
+        userId: String(booking.user_id),
+        eventId: String(booking.event_id),
+        timestamp: new Date().toISOString()
       });
     } catch (notificationError) {
       console.error("Failed to send booking notification:", notificationError);

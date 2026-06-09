@@ -22,14 +22,14 @@ db_instance_class    = "db.t4g.micro"
 db_allocated_storage = 20
 
 
-admin_email            = "admin@blacktickets.com"
-admin_password         = "Admin@12345"
+admin_email    = "admin@blacktickets.com"
+admin_password = "Admin@12345"
 
-user_email             = "user@blacktickets.com"
-user_password          = "User@12345"
+user_email    = "user@blacktickets.com"
+user_password = "User@12345"
 
-db_password            = "BlackTicketsDB123!"
+db_password = "BlackTicketsDB123!"
 
-jwt_secret             = "MyVeryLongJWTSecretForBlackTickets2026"
+jwt_secret = "MyVeryLongJWTSecretForBlackTickets2026"
 
 internal_service_token = "InternalServiceToken2026"

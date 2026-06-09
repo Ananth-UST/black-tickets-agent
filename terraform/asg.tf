@@ -4,8 +4,14 @@ resource "aws_autoscaling_group" "app" {
   desired_capacity    = 1
   max_size            = 2
   vpc_zone_identifier = aws_subnet.private_app[*].id
-  target_group_arns   = [aws_lb_target_group.app.arn]
-  health_check_type   = "ELB"
+  target_group_arns = [
+    aws_lb_target_group.frontend.arn,
+    aws_lb_target_group.identity.arn,
+    aws_lb_target_group.event.arn,
+    aws_lb_target_group.booking.arn,
+    aws_lb_target_group.chatbot.arn
+  ]
+  health_check_type = "ELB"
 
   health_check_grace_period = 300
 

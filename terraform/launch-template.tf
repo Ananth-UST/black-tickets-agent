@@ -135,7 +135,9 @@ resource "aws_launch_template" "app" {
       -e EVENT_SERVICE_URL="http://event-service:4002" \
       "$${ECR_REGISTRY}/blacktickets-chatbot-service:$${IMAGE_TAG}"
 
-    docker run -d --restart unless-stopped --name blacktickets-frontend --network blacktickets -p 80:5173 "$${ECR_REGISTRY}/blacktickets-frontend:$${IMAGE_TAG}"
+    docker run -d --restart unless-stopped --name blacktickets-frontend --network blacktickets -p 80:80 \
+      -e PRIVATE_ALB_DNS="${aws_lb.private.dns_name}" \
+      "$${ECR_REGISTRY}/blacktickets-frontend:$${IMAGE_TAG}"
   EOF
   )
 

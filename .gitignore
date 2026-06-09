@@ -1,9 +1,6 @@
-node_modules
-.env
-.env.local
-.env.*.local
-dist
-coverage
-npm-debug.log*
-.DS_Store
-*.log
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/.terraform.lock.hcl

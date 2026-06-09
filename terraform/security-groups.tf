@@ -47,14 +47,6 @@ resource "aws_security_group" "ec2_app" {
   description = "Allow ALB traffic to EC2 application instances."
   vpc_id      = aws_vpc.main.id
 
-  ingress {
-    description     = "App traffic from ALB"
-    from_port       = var.app_port
-    to_port         = var.app_port
-    protocol        = "tcp"
-    security_groups = [aws_security_group.alb.id]
-  }
-
   egress {
     description = "Outbound application traffic"
     from_port   = 0
@@ -66,6 +58,15 @@ resource "aws_security_group" "ec2_app" {
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-ec2-app-sg"
   })
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ec2_app_frontend_from_public_alb" {
+  security_group_id            = aws_security_group.ec2_app.id
+  referenced_security_group_id = aws_security_group.alb.id
+  ip_protocol                  = "tcp"
+  from_port                    = 80
+  to_port                      = 80
+  description                  = "Frontend traffic from public ALB"
 }
 
 resource "aws_vpc_security_group_ingress_rule" "private_alb_http_from_ec2_app" {

@@ -151,6 +151,11 @@ output "poster_bucket_name" {
   value       = aws_s3_bucket.posters.bucket
 }
 
+output "poster_cloudfront_domain_name" {
+  description = "CloudFront domain name for private S3 poster images."
+  value       = aws_cloudfront_distribution.posters.domain_name
+}
+
 output "public_alb_dns_name" {
   description = "DNS name of the public frontend ALB."
   value       = aws_lb.public.dns_name

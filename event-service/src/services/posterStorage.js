@@ -31,6 +31,11 @@ const uploadPoster = async (file) => {
     })
   );
 
+  const cdnDomain = process.env.POSTER_CDN_DOMAIN;
+  if (cdnDomain) {
+    return `https://${cdnDomain}/${key}`;
+  }
+
   return `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
 };
 

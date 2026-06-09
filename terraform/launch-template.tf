@@ -118,6 +118,7 @@ resource "aws_launch_template" "app" {
       -e INTERNAL_SERVICE_TOKEN="$${INTERNAL_SERVICE_TOKEN}" \
       -e AWS_REGION="$${AWS_REGION}" \
       -e POSTER_BUCKET_NAME="${var.poster_bucket_name}" \
+      -e POSTER_CDN_DOMAIN="${aws_cloudfront_distribution.posters.domain_name}" \
       "$${ECR_REGISTRY}/blacktickets-event-service:$${IMAGE_TAG}"
 
     docker run -d --restart unless-stopped --name booking-service --network blacktickets -p 4003:4003 \

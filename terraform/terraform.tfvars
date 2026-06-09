@@ -1,3 +1,4 @@
+
 aws_region   = "us-east-1"
 project_name = "blacktickets"
 environment  = "dev"
@@ -34,3 +35,5 @@ db_password = "BlackTicketsDB123!"
 jwt_secret = "MyVeryLongJWTSecretForBlackTickets2026"
 
 internal_service_token = "InternalServiceToken2026"
+
+notification_email = "ananthakkumarv@gmail.com"

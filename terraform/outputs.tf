@@ -185,3 +185,18 @@ output "booking_notifications_queue_arn" {
   description = "ARN of the booking notifications SQS queue."
   value       = aws_sqs_queue.booking_notifications.arn
 }
+
+output "booking_notification_lambda_name" {
+  description = "Name of the booking notification Lambda consumer."
+  value       = aws_lambda_function.booking_notification_consumer.function_name
+}
+
+output "booking_notification_lambda_arn" {
+  description = "ARN of the booking notification Lambda consumer."
+  value       = aws_lambda_function.booking_notification_consumer.arn
+}
+
+output "booking_notifications_sns_topic_arn" {
+  description = "ARN of the SNS topic used for booking notification emails."
+  value       = aws_sns_topic.booking_notifications.arn
+}

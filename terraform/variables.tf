@@ -129,6 +129,16 @@ variable "poster_bucket_name" {
   type        = string
 }
 
+variable "notification_email" {
+  description = "Email address subscribed to booking notification messages through SNS."
+  type        = string
+
+  validation {
+    condition     = can(regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", var.notification_email))
+    error_message = "notification_email must be a valid email address."
+  }
+}
+
 variable "admin_email" {
   description = "Seed admin user email for identity-service startup."
   type        = string

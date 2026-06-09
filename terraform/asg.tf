@@ -14,6 +14,33 @@ resource "aws_autoscaling_group" "app" {
   health_check_type = "ELB"
 
   health_check_grace_period = 300
+  enabled_metrics = [
+    "GroupAndWarmPoolDesiredCapacity",
+    "GroupAndWarmPoolTotalCapacity",
+    "GroupDesiredCapacity",
+    "GroupInServiceCapacity",
+    "GroupInServiceInstances",
+    "GroupMaxSize",
+    "GroupMinSize",
+    "GroupPendingCapacity",
+    "GroupPendingInstances",
+    "GroupStandbyCapacity",
+    "GroupStandbyInstances",
+    "GroupTerminatingCapacity",
+    "GroupTerminatingInstances",
+    "GroupTerminatingRetainedCapacity",
+    "GroupTerminatingRetainedInstances",
+    "GroupTotalCapacity",
+    "GroupTotalInstances",
+    "WarmPoolDesiredCapacity",
+    "WarmPoolMinSize",
+    "WarmPoolPendingCapacity",
+    "WarmPoolPendingRetainedCapacity",
+    "WarmPoolTerminatingCapacity",
+    "WarmPoolTerminatingRetainedCapacity",
+    "WarmPoolTotalCapacity",
+    "WarmPoolWarmedCapacity"
+  ]
 
   launch_template {
     id      = aws_launch_template.app.id

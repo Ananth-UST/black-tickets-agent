@@ -3,7 +3,7 @@ resource "aws_autoscaling_group" "app" {
   min_size            = 1
   desired_capacity    = 1
   max_size            = 2
-  vpc_zone_identifier = aws_subnet.private_app[*].id
+  vpc_zone_identifier = module.networking.private_app_subnet_ids
   target_group_arns = [
     aws_lb_target_group.frontend.arn,
     aws_lb_target_group.identity.arn,

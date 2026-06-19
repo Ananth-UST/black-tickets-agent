@@ -3,7 +3,7 @@ resource "aws_lb" "public" {
   load_balancer_type = "application"
   internal           = false
   security_groups    = [aws_security_group.alb.id]
-  subnets            = aws_subnet.public[*].id
+  subnets            = module.networking.public_subnet_ids
 
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-public-alb"
@@ -15,7 +15,7 @@ resource "aws_lb" "private" {
   load_balancer_type = "application"
   internal           = true
   security_groups    = [aws_security_group.private_alb.id]
-  subnets            = aws_subnet.private_app[*].id
+  subnets            = module.networking.private_app_subnet_ids
 
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-private-alb"
@@ -27,7 +27,7 @@ resource "aws_lb_target_group" "frontend" {
   port        = 80
   protocol    = "HTTP"
   target_type = "instance"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   health_check {
     enabled             = true
@@ -50,7 +50,7 @@ resource "aws_lb_target_group" "identity" {
   port        = 4001
   protocol    = "HTTP"
   target_type = "instance"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   health_check {
     enabled             = true
@@ -73,7 +73,7 @@ resource "aws_lb_target_group" "event" {
   port        = 4002
   protocol    = "HTTP"
   target_type = "instance"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   health_check {
     enabled             = true
@@ -96,7 +96,7 @@ resource "aws_lb_target_group" "booking" {
   port        = 4003
   protocol    = "HTTP"
   target_type = "instance"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   health_check {
     enabled             = true
@@ -119,7 +119,7 @@ resource "aws_lb_target_group" "chatbot" {
   port        = 4004
   protocol    = "HTTP"
   target_type = "instance"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   health_check {
     enabled             = true

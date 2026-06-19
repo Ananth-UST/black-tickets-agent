@@ -1,7 +1,7 @@
 resource "aws_security_group" "vpc_endpoints" {
   name        = "${local.name_prefix}-vpc-endpoints-sg"
   description = "Allow HTTPS from app instances to interface VPC endpoints."
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   ingress {
     description     = "HTTPS from app instances"
@@ -25,10 +25,10 @@ resource "aws_security_group" "vpc_endpoints" {
 }
 
 resource "aws_vpc_endpoint" "s3" {
-  vpc_id            = aws_vpc.main.id
+  vpc_id            = module.networking.vpc_id
   service_name      = "com.amazonaws.${var.aws_region}.s3"
   vpc_endpoint_type = "Gateway"
-  route_table_ids   = aws_route_table.private_app[*].id
+  route_table_ids   = module.networking.private_app_route_table_ids
 
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-s3-endpoint"
@@ -36,10 +36,10 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 resource "aws_vpc_endpoint" "ecr_api" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.networking.vpc_id
   service_name        = "com.amazonaws.${var.aws_region}.ecr.api"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.private_app[*].id
+  subnet_ids          = module.networking.private_app_subnet_ids
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 
@@ -49,10 +49,10 @@ resource "aws_vpc_endpoint" "ecr_api" {
 }
 
 resource "aws_vpc_endpoint" "ecr_dkr" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.networking.vpc_id
   service_name        = "com.amazonaws.${var.aws_region}.ecr.dkr"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.private_app[*].id
+  subnet_ids          = module.networking.private_app_subnet_ids
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 
@@ -62,10 +62,10 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
 }
 
 resource "aws_vpc_endpoint" "secretsmanager" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.networking.vpc_id
   service_name        = "com.amazonaws.${var.aws_region}.secretsmanager"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.private_app[*].id
+  subnet_ids          = module.networking.private_app_subnet_ids
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 
@@ -75,10 +75,10 @@ resource "aws_vpc_endpoint" "secretsmanager" {
 }
 
 resource "aws_vpc_endpoint" "cloudwatch_logs" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.networking.vpc_id
   service_name        = "com.amazonaws.${var.aws_region}.logs"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.private_app[*].id
+  subnet_ids          = module.networking.private_app_subnet_ids
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 
@@ -88,10 +88,10 @@ resource "aws_vpc_endpoint" "cloudwatch_logs" {
 }
 
 resource "aws_vpc_endpoint" "ssm" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.networking.vpc_id
   service_name        = "com.amazonaws.${var.aws_region}.ssm"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.private_app[*].id
+  subnet_ids          = module.networking.private_app_subnet_ids
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 
@@ -101,10 +101,10 @@ resource "aws_vpc_endpoint" "ssm" {
 }
 
 resource "aws_vpc_endpoint" "ssm_messages" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.networking.vpc_id
   service_name        = "com.amazonaws.${var.aws_region}.ssmmessages"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.private_app[*].id
+  subnet_ids          = module.networking.private_app_subnet_ids
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 
@@ -114,10 +114,10 @@ resource "aws_vpc_endpoint" "ssm_messages" {
 }
 
 resource "aws_vpc_endpoint" "ec2_messages" {
-  vpc_id              = aws_vpc.main.id
+  vpc_id              = module.networking.vpc_id
   service_name        = "com.amazonaws.${var.aws_region}.ec2messages"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = aws_subnet.private_app[*].id
+  subnet_ids          = module.networking.private_app_subnet_ids
   security_group_ids  = [aws_security_group.vpc_endpoints.id]
   private_dns_enabled = true
 

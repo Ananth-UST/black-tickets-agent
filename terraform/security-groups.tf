@@ -1,7 +1,7 @@
 resource "aws_security_group" "alb" {
   name        = "${local.name_prefix}-alb-sg"
   description = "Allow public HTTP and HTTPS traffic to the public ALB."
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   ingress {
     description = "HTTP from allowed CIDRs"
@@ -35,7 +35,7 @@ resource "aws_security_group" "alb" {
 resource "aws_security_group" "private_alb" {
   name        = "${local.name_prefix}-private-alb-sg"
   description = "Allow HTTP from app instances to the private ALB."
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-private-alb-sg"
@@ -45,7 +45,7 @@ resource "aws_security_group" "private_alb" {
 resource "aws_security_group" "ec2_app" {
   name        = "${local.name_prefix}-ec2-app-sg"
   description = "Allow ALB traffic to EC2 application instances."
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   egress {
     description = "Outbound application traffic"
@@ -99,7 +99,7 @@ resource "aws_vpc_security_group_ingress_rule" "ec2_app_backend_from_private_alb
 resource "aws_security_group" "rds" {
   name        = "${local.name_prefix}-rds-sg"
   description = "Allow PostgreSQL traffic from EC2 application instances."
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.networking.vpc_id
 
   ingress {
     description     = "PostgreSQL from app instances"

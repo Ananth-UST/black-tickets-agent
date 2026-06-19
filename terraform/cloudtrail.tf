@@ -2,7 +2,7 @@ locals {
   cloudtrail_name       = "blacktickets-dev-trail"
   cloudtrail_bucket     = "blacktickets-dev-cloudtrail-logs"
   cloudtrail_log_group  = "/aws/cloudtrail/blacktickets-dev"
-  cloudtrail_source_arn = "arn:aws:cloudtrail:${var.aws_region}:${data.aws_caller_identity.current.account_id}:trail/${local.cloudtrail_name}"
+  cloudtrail_source_arn = "arn:aws:cloudtrail:${var.aws_region}:${module.compute.account_id}:trail/${local.cloudtrail_name}"
 }
 
 resource "aws_s3_bucket" "cloudtrail_logs" {
@@ -102,7 +102,7 @@ data "aws_iam_policy_document" "cloudtrail_bucket" {
     ]
 
     resources = [
-      "${aws_s3_bucket.cloudtrail_logs.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      "${aws_s3_bucket.cloudtrail_logs.arn}/AWSLogs/${module.compute.account_id}/*"
     ]
 
     principals {
@@ -168,7 +168,7 @@ data "aws_iam_policy_document" "cloudtrail_cloudwatch_logs" {
     ]
 
     resources = [
-      "${aws_cloudwatch_log_group.cloudtrail.arn}:log-stream:${data.aws_caller_identity.current.account_id}_CloudTrail_*"
+      "${aws_cloudwatch_log_group.cloudtrail.arn}:log-stream:${module.compute.account_id}_CloudTrail_*"
     ]
   }
 }

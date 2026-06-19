@@ -18,7 +18,7 @@ resource "aws_cloudwatch_metric_alarm" "public_alb_5xx_errors" {
   ok_actions          = local.alarm_actions
 
   dimensions = {
-    LoadBalancer = aws_lb.public.arn_suffix
+    LoadBalancer = module.compute.alb_arn_suffix
   }
 
   tags = merge(local.common_tags, {
@@ -42,7 +42,7 @@ resource "aws_cloudwatch_metric_alarm" "private_alb_target_5xx_errors" {
   ok_actions          = local.alarm_actions
 
   dimensions = {
-    LoadBalancer = aws_lb.private.arn_suffix
+    LoadBalancer = module.compute.private_alb_arn_suffix
   }
 
   tags = merge(local.common_tags, {
@@ -66,7 +66,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_cpu_high" {
   ok_actions          = local.alarm_actions
 
   dimensions = {
-    AutoScalingGroupName = aws_autoscaling_group.app.name
+    AutoScalingGroupName = module.compute.autoscaling_group_name
   }
 
   tags = merge(local.common_tags, {

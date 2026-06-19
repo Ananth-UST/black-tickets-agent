@@ -93,6 +93,6 @@ resource "aws_wafv2_web_acl" "public_alb" {
 }
 
 resource "aws_wafv2_web_acl_association" "public_alb" {
-  resource_arn = aws_lb.public.arn
+  resource_arn = module.compute.alb_arn
   web_acl_arn  = aws_wafv2_web_acl.public_alb.arn
 }

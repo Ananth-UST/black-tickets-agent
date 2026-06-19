@@ -17,7 +17,7 @@ resource "aws_cloudwatch_dashboard" "operations" {
           period  = 300
           stat    = "Sum"
           metrics = [
-            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", aws_lb.public.arn_suffix, { label = "Request Count", stat = "Sum" }],
+            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", module.compute.alb_arn_suffix, { label = "Request Count", stat = "Sum" }],
             [".", "TargetResponseTime", ".", ".", { label = "Target Response Time", stat = "Average", yAxis = "right" }],
             [".", "HTTPCode_ELB_5XX_Count", ".", ".", { label = "ELB 5XX Count", stat = "Sum" }]
           ]
@@ -37,7 +37,7 @@ resource "aws_cloudwatch_dashboard" "operations" {
           period  = 300
           stat    = "Sum"
           metrics = [
-            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", aws_lb.private.arn_suffix, { label = "Request Count", stat = "Sum" }],
+            ["AWS/ApplicationELB", "RequestCount", "LoadBalancer", module.compute.private_alb_arn_suffix, { label = "Request Count", stat = "Sum" }],
             [".", "TargetResponseTime", ".", ".", { label = "Target Response Time", stat = "Average", yAxis = "right" }],
             [".", "HTTPCode_Target_5XX_Count", ".", ".", { label = "Target 5XX Count", stat = "Sum" }]
           ]
@@ -57,7 +57,7 @@ resource "aws_cloudwatch_dashboard" "operations" {
           period  = 300
           stat    = "Average"
           metrics = [
-            ["AWS/AutoScaling", "GroupInServiceInstances", "AutoScalingGroupName", aws_autoscaling_group.app.name, { label = "In-Service Instances" }],
+            ["AWS/AutoScaling", "GroupInServiceInstances", "AutoScalingGroupName", module.compute.autoscaling_group_name, { label = "In-Service Instances" }],
             [".", "GroupDesiredCapacity", ".", ".", { label = "Desired Capacity" }]
           ]
         }
@@ -76,7 +76,7 @@ resource "aws_cloudwatch_dashboard" "operations" {
           period  = 300
           stat    = "Average"
           metrics = [
-            ["AWS/EC2", "CPUUtilization", "AutoScalingGroupName", aws_autoscaling_group.app.name, { label = "CPU Utilization" }]
+            ["AWS/EC2", "CPUUtilization", "AutoScalingGroupName", module.compute.autoscaling_group_name, { label = "CPU Utilization" }]
           ]
         }
       },

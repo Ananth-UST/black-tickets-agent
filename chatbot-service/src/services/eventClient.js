@@ -17,4 +17,16 @@ const fetchEventById = async (eventId) => {
   }
 };
 
-module.exports = { fetchEventById };
+const fetchAllEvents = async () => {
+  try {
+    const url = `${process.env.EVENT_SERVICE_URL}/events`;
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    const serviceError = new Error("Event service unavailable");
+    serviceError.type = "EVENT_SERVICE_UNAVAILABLE";
+    throw serviceError;
+  }
+};
+
+module.exports = { fetchEventById, fetchAllEvents };

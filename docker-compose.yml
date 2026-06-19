@@ -104,6 +104,13 @@ services:
     restart: unless-stopped
     env_file:
       - .env.production
+    environment:
+      BOOKING_SERVICE_URL: http://booking-service:4003
+      AWS_REGION: us-east-1
+      AWS_SDK_LOAD_CONFIG: "1"
+      AWS_PROFILE: default
+    volumes:
+      - ~/.aws:/root/.aws:ro
     depends_on:
       event-service:
         condition: service_healthy
@@ -124,6 +131,8 @@ services:
     restart: unless-stopped
     env_file:
       - ./frontend/.env.production
+    volumes:
+      - ./frontend/nginx/local.conf:/etc/nginx/templates/default.conf.template:ro
     depends_on:
       identity-service:
         condition: service_healthy
@@ -134,11 +143,11 @@ services:
       chatbot-service:
         condition: service_healthy
     ports:
-      - "5173:5173"
+      - "5173:80"
     networks:
       - ticketing_network
     healthcheck:
-      test: ["CMD", "pgrep", "node"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -30,4 +30,5 @@ export const setAuthToken = (token) => {
   userApi.defaults.headers.common.Authorization = header;
   bookingApi.defaults.headers.common.Authorization = header;
   eventApi.defaults.headers.common.Authorization = header;
+  chatbotApi.defaults.headers.common.Authorization = header;
 };

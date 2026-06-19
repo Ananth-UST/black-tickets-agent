@@ -140,29 +140,97 @@ function EventsPage({ user }) {
 
 function EventDetailPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const authContext = useAuth();
   const [eventItem, setEventItem] = useState(null);
   const [chatInput, setChatInput] = useState("");
   const [chatReply, setChatReply] = useState("");
   const [chatError, setChatError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     eventApi.get(`/${id}`).then((res) => setEventItem(res.data));
   }, [id]);
 
+  const isBookingRequest = (message) => {
+    return /book|ticket|reserve|seats?/i.test(message);
+  };
+
+  const formatAgentResponse = (data) => {
+    if (!data) return "Processing request...";
+    
+    // If it's an agent result with agentResult property
+    if (data.agentResult) {
+      const result = data.agentResult;
+      
+      // Handle error cases
+      if (!result.success) {
+        return result.reasoning?.join(" ") || "Could not process your request.";
+      }
+
+      // Format success case
+      let response = "✅ Booking confirmed!\n\n";
+      if (result.reasoning && Array.isArray(result.reasoning)) {
+        result.reasoning.forEach((step) => {
+          if (step.includes("Understood")) response += "✅ " + step + "\n";
+          else if (step.includes("Event found")) response += "🎟 " + step + "\n";
+          else if (step.includes("Seats")) response += "🪑 " + step + "\n";
+          else if (step.includes("successfully")) response += "✅ " + step + "\n";
+          else response += "• " + step + "\n";
+        });
+      }
+
+      if (result.bookingResult) {
+        response += "\n📋 Booking Details:\n";
+        response += "• ID: " + result.bookingResult.id + "\n";
+        response += "• Status: " + result.bookingResult.status + "\n";
+      }
+
+      return response;
+    }
+
+    // Fallback: just return the reply
+    return data.reply || "Processing request...";
+  };
+
   const askChatbot = async (e) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
 
+    const userMessage = chatInput;
+    const isBookingReq = isBookingRequest(userMessage);
+
+    if (isBookingReq && !authContext.token) {
+      setChatError("🔐 Please log in first to book tickets through the AI assistant.");
+      setChatInput("");
+      return;
+    }
+
     setChatError("");
+    setChatReply("");
+    setIsLoading(true);
+
     try {
       const { data } = await chatbotApi.post("/chat", {
-        message: chatInput,
+        message: userMessage,
         eventId: Number(id)
       });
-      setChatReply(data.reply);
+      
+      const formatted = formatAgentResponse(data);
+      setChatReply(formatted);
       setChatInput("");
     } catch (error) {
-      setChatError(error?.response?.data?.message || "Chatbot is unavailable right now.");
+      const errorMsg = error?.response?.data?.message;
+      
+      if (error?.response?.status === 401) {
+        setChatError("🔐 Please log in first to book tickets through the AI assistant.");
+      } else if (errorMsg?.includes("Authentication required")) {
+        setChatError("🔐 Please log in first to book tickets through the AI assistant.");
+      } else {
+        setChatError(errorMsg || "Chatbot is unavailable right now. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -184,16 +252,19 @@ function EventDetailPage() {
 
       <div className="chatbot-box">
         <h3>Event Assistant</h3>
-        <p className="muted">Ask about date, venue, seats, or event highlights.</p>
+        <p className="muted">Ask about details, availability, or say "Book X tickets" to reserve seats with AI.</p>
         <form onSubmit={askChatbot} className="chatbot-form">
           <input
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
-            placeholder="e.g., How many seats are left?"
+            placeholder="e.g., Book 2 tickets or How many seats are left?"
+            disabled={isLoading}
           />
-          <button type="submit" className="btn-primary">Ask</button>
+          <button type="submit" className="btn-primary" disabled={isLoading}>
+            {isLoading ? "Processing..." : "Ask"}
+          </button>
         </form>
-        {chatReply && <p className="chatbot-reply">{chatReply}</p>}
+        {chatReply && <div className="chatbot-reply" style={{ whiteSpace: "pre-line" }}>{chatReply}</div>}
         {chatError && <p className="form-message">{chatError}</p>}
       </div>
     </section>

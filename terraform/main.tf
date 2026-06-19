@@ -74,3 +74,22 @@ module "compute" {
 
   depends_on = [module.data]
 }
+
+module "observability" {
+  source = "./modules/observability"
+
+  project_name                      = var.project_name
+  environment                       = var.environment
+  aws_region                        = var.aws_region
+  account_id                        = module.compute.account_id
+  public_alb_arn                    = module.compute.alb_arn
+  public_alb_arn_suffix             = module.compute.alb_arn_suffix
+  private_alb_arn_suffix            = module.compute.private_alb_arn_suffix
+  autoscaling_group_name            = module.compute.autoscaling_group_name
+  rds_instance_identifier           = module.data.rds_instance_identifier
+  lambda_function_name              = module.data.booking_notification_lambda_name
+  sqs_queue_name                    = module.data.booking_notifications_queue_name
+  sns_topic_arn                     = module.data.booking_notifications_sns_topic_arn
+  poster_cloudfront_distribution_id = module.data.poster_cloudfront_distribution_id
+  poster_bucket_arn                 = module.data.poster_bucket_arn
+}

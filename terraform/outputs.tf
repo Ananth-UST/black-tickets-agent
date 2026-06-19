@@ -203,45 +203,37 @@ output "booking_notifications_sns_topic_arn" {
 
 output "cloudwatch_dashboard_name" {
   description = "Name of the CloudWatch operations dashboard."
-  value       = aws_cloudwatch_dashboard.operations.dashboard_name
+  value       = module.observability.cloudwatch_dashboard_name
 }
 
 output "cloudwatch_alarm_names" {
   description = "Names of the CloudWatch alarms for BlackTickets operations."
-  value = [
-    aws_cloudwatch_metric_alarm.public_alb_5xx_errors.alarm_name,
-    aws_cloudwatch_metric_alarm.private_alb_target_5xx_errors.alarm_name,
-    aws_cloudwatch_metric_alarm.ec2_cpu_high.alarm_name,
-    aws_cloudwatch_metric_alarm.rds_cpu_high.alarm_name,
-    aws_cloudwatch_metric_alarm.rds_free_storage_low.alarm_name,
-    aws_cloudwatch_metric_alarm.lambda_errors.alarm_name,
-    aws_cloudwatch_metric_alarm.sqs_queue_depth_high.alarm_name
-  ]
+  value       = module.observability.cloudwatch_alarm_names
 }
 
 output "waf_web_acl_arn" {
   description = "ARN of the WAF Web ACL associated with the public ALB."
-  value       = aws_wafv2_web_acl.public_alb.arn
+  value       = module.observability.waf_web_acl_arn
 }
 
 output "waf_web_acl_name" {
   description = "Name of the WAF Web ACL associated with the public ALB."
-  value       = aws_wafv2_web_acl.public_alb.name
+  value       = module.observability.waf_web_acl_name
 }
 
 output "cloudtrail_name" {
   description = "Name of the BlackTickets CloudTrail trail."
-  value       = aws_cloudtrail.main.name
+  value       = module.observability.cloudtrail_name
 }
 
 output "cloudtrail_bucket_name" {
   description = "Name of the S3 bucket that stores CloudTrail logs."
-  value       = aws_s3_bucket.cloudtrail_logs.bucket
+  value       = module.observability.cloudtrail_bucket_name
 }
 
 output "cloudtrail_log_group_name" {
   description = "Name of the CloudWatch log group that receives CloudTrail events."
-  value       = aws_cloudwatch_log_group.cloudtrail.name
+  value       = module.observability.cloudtrail_log_group_name
 }
 
 output "tfstate_bucket_name" {

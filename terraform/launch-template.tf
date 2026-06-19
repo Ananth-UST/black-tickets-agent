@@ -139,6 +139,8 @@ resource "aws_launch_template" "app" {
 
     docker run -d --restart unless-stopped --name chatbot-service --network blacktickets -p 4004:4004 \
       -e EVENT_SERVICE_URL="http://event-service:4002" \
+      -e BOOKING_SERVICE_URL="http://booking-service:4003" \
+      -e AWS_REGION="$${AWS_REGION}" \
       "$${ECR_REGISTRY}/blacktickets-chatbot-service:$${IMAGE_TAG}"
 
     docker run -d --restart unless-stopped --name blacktickets-frontend --network blacktickets -p 80:80 \

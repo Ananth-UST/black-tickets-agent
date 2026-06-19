@@ -72,6 +72,24 @@ resource "aws_iam_role_policy" "ec2_booking_notifications_sqs" {
   policy = data.aws_iam_policy_document.ec2_booking_notifications_sqs.json
 }
 
+data "aws_iam_policy_document" "ec2_bedrock_invoke" {
+  statement {
+    actions = [
+      "bedrock:InvokeModel"
+    ]
+
+    resources = [
+      "arn:aws:bedrock:us-east-1::foundation-model/amazon.nova-micro-v1:0"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "ec2_bedrock_invoke" {
+  name   = "${local.name_prefix}-bedrock-invoke"
+  role   = aws_iam_role.ec2_app.id
+  policy = data.aws_iam_policy_document.ec2_bedrock_invoke.json
+}
+
 resource "aws_iam_instance_profile" "ec2_app" {
   name = "${local.name_prefix}-ec2-app-profile"
   role = aws_iam_role.ec2_app.name

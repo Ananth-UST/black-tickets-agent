@@ -8,3 +8,14 @@ module "networking" {
   private_app_subnet_cidrs = var.private_app_subnet_cidrs
   private_db_subnet_cidrs  = var.private_db_subnet_cidrs
 }
+
+module "security_groups" {
+  source = "./modules/security-groups"
+
+  project_name      = var.project_name
+  environment       = var.environment
+  vpc_id            = module.networking.vpc_id
+  alb_ingress_cidrs = var.alb_ingress_cidrs
+  app_port          = var.app_port
+  rds_port          = var.rds_port
+}

@@ -1,7 +1,17 @@
+locals {
+  name_prefix = "${var.project_name}-${var.environment}"
+
+  common_tags = {
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  }
+}
+
 resource "aws_security_group" "alb" {
   name        = "${local.name_prefix}-alb-sg"
   description = "Allow public HTTP and HTTPS traffic to the public ALB."
-  vpc_id      = module.networking.vpc_id
+  vpc_id      = var.vpc_id
 
   ingress {
     description = "HTTP from allowed CIDRs"
@@ -35,7 +45,7 @@ resource "aws_security_group" "alb" {
 resource "aws_security_group" "private_alb" {
   name        = "${local.name_prefix}-private-alb-sg"
   description = "Allow HTTP from app instances to the private ALB."
-  vpc_id      = module.networking.vpc_id
+  vpc_id      = var.vpc_id
 
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-private-alb-sg"
@@ -45,7 +55,7 @@ resource "aws_security_group" "private_alb" {
 resource "aws_security_group" "ec2_app" {
   name        = "${local.name_prefix}-ec2-app-sg"
   description = "Allow ALB traffic to EC2 application instances."
-  vpc_id      = module.networking.vpc_id
+  vpc_id      = var.vpc_id
 
   egress {
     description = "Outbound application traffic"
@@ -99,7 +109,7 @@ resource "aws_vpc_security_group_ingress_rule" "ec2_app_backend_from_private_alb
 resource "aws_security_group" "rds" {
   name        = "${local.name_prefix}-rds-sg"
   description = "Allow PostgreSQL traffic from EC2 application instances."
-  vpc_id      = module.networking.vpc_id
+  vpc_id      = var.vpc_id
 
   ingress {
     description     = "PostgreSQL from app instances"
@@ -119,5 +129,31 @@ resource "aws_security_group" "rds" {
 
   tags = merge(local.common_tags, {
     Name = "${local.name_prefix}-rds-sg"
+  })
+}
+
+resource "aws_security_group" "vpc_endpoints" {
+  name        = "${local.name_prefix}-vpc-endpoints-sg"
+  description = "Allow HTTPS from app instances to interface VPC endpoints."
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description     = "HTTPS from app instances"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ec2_app.id]
+  }
+
+  egress {
+    description = "Outbound endpoint traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = merge(local.common_tags, {
+    Name = "${local.name_prefix}-vpc-endpoints-sg"
   })
 }

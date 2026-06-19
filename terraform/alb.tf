@@ -2,7 +2,7 @@ resource "aws_lb" "public" {
   name               = "${local.name_prefix}-public-alb"
   load_balancer_type = "application"
   internal           = false
-  security_groups    = [aws_security_group.alb.id]
+  security_groups    = [module.security_groups.alb_security_group_id]
   subnets            = module.networking.public_subnet_ids
 
   tags = merge(local.common_tags, {
@@ -14,7 +14,7 @@ resource "aws_lb" "private" {
   name               = "${local.name_prefix}-private-alb"
   load_balancer_type = "application"
   internal           = true
-  security_groups    = [aws_security_group.private_alb.id]
+  security_groups    = [module.security_groups.private_alb_security_group_id]
   subnets            = module.networking.private_app_subnet_ids
 
   tags = merge(local.common_tags, {

@@ -1,29 +1,3 @@
-resource "aws_security_group" "vpc_endpoints" {
-  name        = "${local.name_prefix}-vpc-endpoints-sg"
-  description = "Allow HTTPS from app instances to interface VPC endpoints."
-  vpc_id      = module.networking.vpc_id
-
-  ingress {
-    description     = "HTTPS from app instances"
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    security_groups = [aws_security_group.ec2_app.id]
-  }
-
-  egress {
-    description = "Outbound endpoint traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = merge(local.common_tags, {
-    Name = "${local.name_prefix}-vpc-endpoints-sg"
-  })
-}
-
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = module.networking.vpc_id
   service_name      = "com.amazonaws.${var.aws_region}.s3"
@@ -40,7 +14,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   service_name        = "com.amazonaws.${var.aws_region}.ecr.api"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.networking.private_app_subnet_ids
-  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  security_group_ids  = [module.security_groups.vpc_endpoints_security_group_id]
   private_dns_enabled = true
 
   tags = merge(local.common_tags, {
@@ -53,7 +27,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   service_name        = "com.amazonaws.${var.aws_region}.ecr.dkr"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.networking.private_app_subnet_ids
-  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  security_group_ids  = [module.security_groups.vpc_endpoints_security_group_id]
   private_dns_enabled = true
 
   tags = merge(local.common_tags, {
@@ -66,7 +40,7 @@ resource "aws_vpc_endpoint" "secretsmanager" {
   service_name        = "com.amazonaws.${var.aws_region}.secretsmanager"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.networking.private_app_subnet_ids
-  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  security_group_ids  = [module.security_groups.vpc_endpoints_security_group_id]
   private_dns_enabled = true
 
   tags = merge(local.common_tags, {
@@ -79,7 +53,7 @@ resource "aws_vpc_endpoint" "cloudwatch_logs" {
   service_name        = "com.amazonaws.${var.aws_region}.logs"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.networking.private_app_subnet_ids
-  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  security_group_ids  = [module.security_groups.vpc_endpoints_security_group_id]
   private_dns_enabled = true
 
   tags = merge(local.common_tags, {
@@ -92,7 +66,7 @@ resource "aws_vpc_endpoint" "ssm" {
   service_name        = "com.amazonaws.${var.aws_region}.ssm"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.networking.private_app_subnet_ids
-  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  security_group_ids  = [module.security_groups.vpc_endpoints_security_group_id]
   private_dns_enabled = true
 
   tags = merge(local.common_tags, {
@@ -105,7 +79,7 @@ resource "aws_vpc_endpoint" "ssm_messages" {
   service_name        = "com.amazonaws.${var.aws_region}.ssmmessages"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.networking.private_app_subnet_ids
-  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  security_group_ids  = [module.security_groups.vpc_endpoints_security_group_id]
   private_dns_enabled = true
 
   tags = merge(local.common_tags, {
@@ -118,7 +92,7 @@ resource "aws_vpc_endpoint" "ec2_messages" {
   service_name        = "com.amazonaws.${var.aws_region}.ec2messages"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = module.networking.private_app_subnet_ids
-  security_group_ids  = [aws_security_group.vpc_endpoints.id]
+  security_group_ids  = [module.security_groups.vpc_endpoints_security_group_id]
   private_dns_enabled = true
 
   tags = merge(local.common_tags, {

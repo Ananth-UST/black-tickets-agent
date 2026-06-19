@@ -1,3 +1,13 @@
+locals {
+  name_prefix = "${var.project_name}-${var.environment}"
+
+  common_tags = {
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  }
+}
+
 data "aws_iam_policy_document" "ec2_assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -61,7 +71,7 @@ data "aws_iam_policy_document" "ec2_booking_notifications_sqs" {
     ]
 
     resources = [
-      aws_sqs_queue.booking_notifications.arn
+      var.booking_notifications_queue_arn
     ]
   }
 }

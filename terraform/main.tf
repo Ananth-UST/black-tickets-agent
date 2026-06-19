@@ -19,3 +19,12 @@ module "security_groups" {
   app_port          = var.app_port
   rds_port          = var.rds_port
 }
+
+module "iam" {
+  source = "./modules/iam"
+
+  project_name                    = var.project_name
+  environment                     = var.environment
+  poster_bucket_name              = var.poster_bucket_name
+  booking_notifications_queue_arn = aws_sqs_queue.booking_notifications.arn
+}

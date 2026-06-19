@@ -26,7 +26,7 @@ resource "aws_launch_template" "app" {
   key_name      = var.ec2_key_name
 
   iam_instance_profile {
-    name = aws_iam_instance_profile.ec2_app.name
+    name = module.iam.ec2_instance_profile_name
   }
 
   vpc_security_group_ids = [module.security_groups.ec2_app_security_group_id]

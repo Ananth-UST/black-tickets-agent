@@ -94,7 +94,7 @@ resource "aws_cloudwatch_dashboard" "operations" {
           period  = 300
           stat    = "Average"
           metrics = [
-            ["AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", aws_db_instance.postgres.identifier, { label = "CPU Utilization" }],
+            ["AWS/RDS", "CPUUtilization", "DBInstanceIdentifier", module.data.rds_instance_identifier, { label = "CPU Utilization" }],
             [".", "DatabaseConnections", ".", ".", { label = "Database Connections" }],
             [".", "FreeStorageSpace", ".", ".", { label = "Free Storage Space", yAxis = "right" }]
           ]
@@ -114,7 +114,7 @@ resource "aws_cloudwatch_dashboard" "operations" {
           period  = 300
           stat    = "Sum"
           metrics = [
-            ["AWS/Lambda", "Invocations", "FunctionName", aws_lambda_function.booking_notification_consumer.function_name, { label = "Invocations", stat = "Sum" }],
+            ["AWS/Lambda", "Invocations", "FunctionName", module.data.booking_notification_lambda_name, { label = "Invocations", stat = "Sum" }],
             [".", "Errors", ".", ".", { label = "Errors", stat = "Sum" }],
             [".", "Duration", ".", ".", { label = "Duration", stat = "Average", yAxis = "right" }]
           ]
@@ -134,7 +134,7 @@ resource "aws_cloudwatch_dashboard" "operations" {
           period  = 300
           stat    = "Sum"
           metrics = [
-            ["AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", aws_sqs_queue.booking_notifications.name, { label = "Visible Messages", stat = "Average" }],
+            ["AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", module.data.booking_notifications_queue_name, { label = "Visible Messages", stat = "Average" }],
             [".", "NumberOfMessagesSent", ".", ".", { label = "Messages Sent", stat = "Sum" }]
           ]
         }
@@ -153,7 +153,7 @@ resource "aws_cloudwatch_dashboard" "operations" {
           period  = 300
           stat    = "Sum"
           metrics = [
-            ["AWS/CloudFront", "Requests", "DistributionId", aws_cloudfront_distribution.posters.id, "Region", "Global", { label = "Requests", stat = "Sum" }],
+            ["AWS/CloudFront", "Requests", "DistributionId", module.data.poster_cloudfront_distribution_id, "Region", "Global", { label = "Requests", stat = "Sum" }],
             [".", "BytesDownloaded", ".", ".", ".", ".", { label = "Bytes Downloaded", stat = "Sum", yAxis = "right" }]
           ]
         }

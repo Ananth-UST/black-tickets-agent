@@ -128,12 +128,12 @@ output "interface_endpoint_ids" {
 
 output "rds_endpoint" {
   description = "RDS PostgreSQL endpoint address."
-  value       = aws_db_instance.postgres.address
+  value       = module.data.rds_endpoint
 }
 
 output "app_config_secret_arn" {
   description = "ARN of the Secrets Manager secret containing app runtime config."
-  value       = aws_secretsmanager_secret.app_config.arn
+  value       = module.data.app_config_secret_arn
 }
 
 output "nat_gateway_id" {
@@ -148,12 +148,12 @@ output "nat_gateway_public_ip" {
 
 output "poster_bucket_name" {
   description = "Name of the S3 bucket used for event poster uploads."
-  value       = aws_s3_bucket.posters.bucket
+  value       = module.data.poster_bucket_name
 }
 
 output "poster_cloudfront_domain_name" {
   description = "CloudFront domain name for private S3 poster images."
-  value       = aws_cloudfront_distribution.posters.domain_name
+  value       = module.data.poster_cloudfront_domain_name
 }
 
 output "public_alb_dns_name" {
@@ -178,27 +178,27 @@ output "backend_target_group_arns" {
 
 output "booking_notifications_queue_url" {
   description = "URL of the booking notifications SQS queue."
-  value       = aws_sqs_queue.booking_notifications.url
+  value       = module.data.booking_notifications_queue_url
 }
 
 output "booking_notifications_queue_arn" {
   description = "ARN of the booking notifications SQS queue."
-  value       = aws_sqs_queue.booking_notifications.arn
+  value       = module.data.booking_notifications_queue_arn
 }
 
 output "booking_notification_lambda_name" {
   description = "Name of the booking notification Lambda consumer."
-  value       = aws_lambda_function.booking_notification_consumer.function_name
+  value       = module.data.booking_notification_lambda_name
 }
 
 output "booking_notification_lambda_arn" {
   description = "ARN of the booking notification Lambda consumer."
-  value       = aws_lambda_function.booking_notification_consumer.arn
+  value       = module.data.booking_notification_lambda_arn
 }
 
 output "booking_notifications_sns_topic_arn" {
   description = "ARN of the SNS topic used for booking notification emails."
-  value       = aws_sns_topic.booking_notifications.arn
+  value       = module.data.booking_notifications_sns_topic_arn
 }
 
 output "cloudwatch_dashboard_name" {

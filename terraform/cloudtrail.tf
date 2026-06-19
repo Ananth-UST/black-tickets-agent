@@ -196,7 +196,7 @@ resource "aws_cloudtrail" "main" {
     data_resource {
       type = "AWS::S3::Object"
       values = [
-        "${aws_s3_bucket.posters.arn}/"
+        "${module.data.poster_bucket_arn}/"
       ]
     }
   }

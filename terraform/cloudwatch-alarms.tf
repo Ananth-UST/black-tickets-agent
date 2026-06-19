@@ -1,5 +1,5 @@
 locals {
-  alarm_actions = [aws_sns_topic.booking_notifications.arn]
+  alarm_actions = [module.data.booking_notifications_sns_topic_arn]
 }
 
 resource "aws_cloudwatch_metric_alarm" "public_alb_5xx_errors" {
@@ -90,7 +90,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_cpu_high" {
   ok_actions          = local.alarm_actions
 
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.postgres.identifier
+    DBInstanceIdentifier = module.data.rds_instance_identifier
   }
 
   tags = merge(local.common_tags, {
@@ -114,7 +114,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_free_storage_low" {
   ok_actions          = local.alarm_actions
 
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.postgres.identifier
+    DBInstanceIdentifier = module.data.rds_instance_identifier
   }
 
   tags = merge(local.common_tags, {
@@ -138,7 +138,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
   ok_actions          = local.alarm_actions
 
   dimensions = {
-    FunctionName = aws_lambda_function.booking_notification_consumer.function_name
+    FunctionName = module.data.booking_notification_lambda_name
   }
 
   tags = merge(local.common_tags, {
@@ -162,7 +162,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_queue_depth_high" {
   ok_actions          = local.alarm_actions
 
   dimensions = {
-    QueueName = aws_sqs_queue.booking_notifications.name
+    QueueName = module.data.booking_notifications_queue_name
   }
 
   tags = merge(local.common_tags, {

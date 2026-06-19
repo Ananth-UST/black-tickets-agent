@@ -110,19 +110,19 @@ output "vpc_endpoints_security_group_id" {
 
 output "s3_gateway_endpoint_id" {
   description = "ID of the S3 Gateway VPC endpoint."
-  value       = aws_vpc_endpoint.s3.id
+  value       = module.vpc_endpoints.s3_endpoint_id
 }
 
 output "interface_endpoint_ids" {
   description = "IDs of the interface VPC endpoints."
   value = {
-    ecr_api         = aws_vpc_endpoint.ecr_api.id
-    ecr_dkr         = aws_vpc_endpoint.ecr_dkr.id
-    secretsmanager  = aws_vpc_endpoint.secretsmanager.id
-    cloudwatch_logs = aws_vpc_endpoint.cloudwatch_logs.id
-    ssm             = aws_vpc_endpoint.ssm.id
-    ssm_messages    = aws_vpc_endpoint.ssm_messages.id
-    ec2_messages    = aws_vpc_endpoint.ec2_messages.id
+    ecr_api         = module.vpc_endpoints.ecr_api_endpoint_id
+    ecr_dkr         = module.vpc_endpoints.ecr_dkr_endpoint_id
+    secretsmanager  = module.vpc_endpoints.secretsmanager_endpoint_id
+    cloudwatch_logs = module.vpc_endpoints.cloudwatch_logs_endpoint_id
+    ssm             = module.vpc_endpoints.ssm_endpoint_id
+    ssm_messages    = module.vpc_endpoints.ssm_messages_endpoint_id
+    ec2_messages    = module.vpc_endpoints.ec2_messages_endpoint_id
   }
 }
 

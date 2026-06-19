@@ -1,3 +1,13 @@
+locals {
+  name_prefix = "${var.project_name}-${var.environment}"
+
+  common_tags = {
+    Project     = var.project_name
+    Environment = var.environment
+    ManagedBy   = "terraform"
+  }
+}
+
 module "networking" {
   source = "./modules/networking"
 
@@ -73,6 +83,18 @@ module "compute" {
   poster_cdn_domain             = module.data.poster_cloudfront_domain_name
 
   depends_on = [module.data]
+}
+
+module "vpc_endpoints" {
+  source = "./modules/vpc-endpoints"
+
+  project_name                   = var.project_name
+  environment                    = var.environment
+  aws_region                     = var.aws_region
+  vpc_id                         = module.networking.vpc_id
+  private_app_subnet_ids         = module.networking.private_app_subnet_ids
+  vpc_endpoint_security_group_id = module.security_groups.vpc_endpoints_security_group_id
+  private_route_table_ids        = module.networking.private_app_route_table_ids
 }
 
 module "observability" {

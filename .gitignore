@@ -4,4 +4,6 @@ terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
 terraform/*.tfstate
 terraform/*.tfstate.backup
+terraform/*.tfstate.*
+terraform/rescue-state.json
 terraform/.terraform.lock.hcl

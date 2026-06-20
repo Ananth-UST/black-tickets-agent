@@ -1,27 +1,26 @@
 import axios from "axios";
 
-// For Kubernetes: use relative paths (routed via Ingress)
-// For local Docker with nginx: set VITE_API_BASE_URL to http://localhost
+// Use /api so React page routes like /events can be served by the SPA.
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 export const identityApi = axios.create({
-  baseURL: `${API_BASE_URL}/auth`
+  baseURL: `${API_BASE_URL}/api/auth`
 });
 
 export const userApi = axios.create({
-  baseURL: `${API_BASE_URL}/users`
+  baseURL: `${API_BASE_URL}/api/users`
 });
 
 export const eventApi = axios.create({
-  baseURL: `${API_BASE_URL}/events`
+  baseURL: `${API_BASE_URL}/api/events`
 });
 
 export const bookingApi = axios.create({
-  baseURL: `${API_BASE_URL}/bookings`
+  baseURL: `${API_BASE_URL}/api/bookings`
 });
 
 export const chatbotApi = axios.create({
-  baseURL: `${API_BASE_URL}/chatbot`
+  baseURL: `${API_BASE_URL}/api/chatbot`
 });
 
 export const setAuthToken = (token) => {

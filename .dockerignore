@@ -1,0 +1,15 @@
+.git
+.terraform
+**/.terraform
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.production.example
+**/node_modules
+**/dist
+**/.build
+**/*.tfstate
+**/*.tfstate.*
+terraform/rescue-state.json
+terraform/terraform.tfvars
+k8s/secrets.yaml

@@ -31,7 +31,7 @@ const extractJson = (text) => {
   const last = text.lastIndexOf("}");
 
   if (first === -1 || last === -1 || last <= first) {
-    throw new Error(`Unable to extract valid JSON from Bedrock response: ${text}`);
+    throw new Error("Unable to extract valid JSON from Bedrock response.");
   }
 
   return text.slice(first, last + 1);
@@ -125,7 +125,7 @@ User message: "${message}"
   const modelText = parsedOutput?.output?.message?.content?.[0]?.text;
 
   if (!modelText) {
-    throw new Error(`Unexpected Bedrock response format: ${rawOutput}`);
+    throw new Error("Unexpected Bedrock response format.");
   }
 
   const jsonText = extractJson(modelText);

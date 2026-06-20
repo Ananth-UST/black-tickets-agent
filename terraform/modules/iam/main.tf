@@ -33,14 +33,28 @@ resource "aws_iam_role_policy_attachment" "ec2_ecr_read_only" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_iam_role_policy_attachment" "ec2_secrets_manager_read_write" {
-  role       = aws_iam_role.ec2_app.name
-  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
-}
-
 resource "aws_iam_role_policy_attachment" "ec2_ssm_managed_instance_core" {
   role       = aws_iam_role.ec2_app.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+data "aws_iam_policy_document" "ec2_app_config_secret_read" {
+  statement {
+    actions = [
+      "secretsmanager:DescribeSecret",
+      "secretsmanager:GetSecretValue"
+    ]
+
+    resources = [
+      var.app_config_secret_arn
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "ec2_app_config_secret_read" {
+  name   = "${local.name_prefix}-app-config-secret-read"
+  role   = aws_iam_role.ec2_app.id
+  policy = data.aws_iam_policy_document.ec2_app_config_secret_read.json
 }
 
 data "aws_iam_policy_document" "ec2_poster_bucket_access" {

@@ -17,3 +17,8 @@ variable "booking_notifications_queue_arn" {
   description = "ARN of the booking notifications SQS queue."
   type        = string
 }
+
+variable "app_config_secret_arn" {
+  description = "ARN of the Secrets Manager app config secret readable by EC2 app instances."
+  type        = string
+}

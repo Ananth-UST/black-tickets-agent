@@ -37,6 +37,7 @@ module "iam" {
   environment                     = var.environment
   poster_bucket_name              = var.poster_bucket_name
   booking_notifications_queue_arn = module.data.booking_notifications_queue_arn
+  app_config_secret_arn           = module.data.app_config_secret_arn
 }
 
 module "data" {
